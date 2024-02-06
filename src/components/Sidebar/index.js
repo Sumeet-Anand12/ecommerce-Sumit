@@ -45,37 +45,37 @@ const Sidebar = () => {
                        
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto mr-4'>
                             30</span>
                         </div>
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto'>
                             30</span>
                         </div>
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto'>
                             30</span>
                         </div>
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto'>
                             30</span>
                         </div>
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto'>
                             30</span>
                         </div>
                         <div className='catItem d-flex align-items-center'>
                             <span className='img'><img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg' width={30} /></span>
-                            <h4 className='mb-0 ml-3 mr-3 text-capitalize'>Milk & Dairies</h4>
+                            <h4 className='mb-0 marginRight marginLeft text-capitalize'>Milk & Dairies</h4>
                             <span className='d-flex align-items-center justify-content-center rounded-circle ml-auto'>
                             30</span>
                         </div>                         

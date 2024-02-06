@@ -108,7 +108,7 @@ const Nav = () => {
                         <Button><Link to='/about'>About Us</Link></Button>
                       </li>                    
                       <li>
-                        <Button><Link to='/about'>Contact</Link></Button>
+                        <Button><Link to='/contact'>Contact</Link></Button>
                       </li>                    
                       <li>
                         <Button><Link to='/about'>My Account</Link></Button>

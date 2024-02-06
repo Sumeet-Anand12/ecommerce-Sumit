@@ -128,7 +128,7 @@ const Home  =() => {
                                 <img src={Banner4} className='w-100' />
                             </div>
 
-                            <div className='col-md-9'>
+                            <div className='col-md-9 homeSlider'>
                             <Slider {...settings} className='prodSlider'>   
                                                     
                             <div className='item'>

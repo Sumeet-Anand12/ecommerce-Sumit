@@ -15,8 +15,8 @@ const HomeSlider = () => {
     var settings = {
         dots: true,
         infinite: true,
-        speed: 5,
-        slidesToShow: 1,
+        speed: 500,
+        slidesToShow: 4,
         slidesToScroll: 1,
         fade: true,
         arrows:true,

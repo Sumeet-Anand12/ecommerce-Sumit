@@ -13,6 +13,7 @@ import Pages from './pages/Pages';
 import Contact from './pages/Contact';
 import Footer from './components/footer/footer';
 import Listing from './pages/Pages/Listing';
+import DetailsPage from './pages/Details';
 
 const MyContext = createContext();
 
@@ -30,6 +31,7 @@ const App = () => {
       <Routes>
       <Route exact={true} path="/" element={<Home/>}/>
       <Route exact={true} path="/about" element={<About/>}/>
+      <Route exact={true} path="/product/details" element={<DetailsPage/>}/>
       <Route exact={true} path="/listing" element={<Listing/>}/>
       <Route exact={true} path="/shop" element={<Shop/>}/>
       <Route exact={true} path="/megaMenu" element={<Megamenu/>}/>

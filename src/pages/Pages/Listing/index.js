@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Sidebar from '../../../components/Sidebar'
 import Product from '../../../components/product'
 // import { Button } from 'bootstrap'
@@ -9,6 +9,7 @@ import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 
 
 const Listing = () => {
+    const { id } = useParams();
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [isOpenDropDown2, setisOpenDropDown2] = useState(false);
@@ -117,9 +118,7 @@ const Listing = () => {
 
                             <div className='productRow'>
                                 
-
                              <div className='item pt-0'>
-
                              <Product/>
                              </div>
                              <div className='item pt-0'>

@@ -61,3 +61,7 @@
 .newsLetterSection .box .img{width: 45%;}
 .newsLetterSection .box .img img{position: relative; top: 60px;}
 .newsLetterSection .box  .newsLetterBanner{position: relative !important; left: 0px !important; bottom: inherit !important;}
+
+.homeProductsRow2 .homeSlider .slick-arrow{ position: absolute; top: 47% !important; width: 60px !important; height: 60px !important; border-radius: 50% !important; background: #F2F3F4 !important; z-index: 10 !important; transition: all 0.2s ease-in-out; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);}
+.homeProductsRow2 .homeSlider .slick-arrow.slick-next{right: 2% !important;}
+.homeProductsRow2 .homeSlider .slick-arrow.slick-prev{left: 2% !important;}
