@@ -11,7 +11,8 @@ import { Button } from '@mui/material';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import Sidebar from '../../components/Sidebar/index';
+// import Sidebar from '../../components/Sidebar/index';
+import Product from '../../components/product';
 
 
 const DetailsPage = () => {
@@ -49,6 +50,18 @@ const DetailsPage = () => {
         arrows:true,
         // autoplay:true
     };
+
+
+    var related = {
+        dots: false,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        fade: false,
+        arrows: true
+    };
+
    const zoomSlider = useRef();
    const zoomSliderBig = useRef();
 
@@ -167,6 +180,18 @@ const DetailsPage = () => {
                          <p> 
                          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
                            </p>
+                         <p> 
+                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
+                           </p>
+                         <p> 
+                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
+                           </p>
+                         <p> 
+                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
+                           </p>
+                         <p> 
+                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
+                           </p>
                            <div className='productSize d-flex align-items-center'>
                             <span>Size/Weight:</span>
                             <ul className='list list-inline mb-0 Margin'>  
@@ -208,17 +233,17 @@ const DetailsPage = () => {
                             <ul className='list list-inline'>
                                  <li className='list list-inline-item'>
                                     
-                                        <Button className='active' onClick={()=>setActiveTabs(0)}>
+                                        <Button className={`${activeTabs ===0 && 'active'}`} onClick={()=>setActiveTabs(0)}>
                                             Description
                                         </Button>
                                    </li>
                                     <li className='list list-inline-item'>
-                                        <Button className='active' onClick={()=>setActiveTabs(1)}>
+                                        <Button className={`${activeTabs ===1 && 'active'}`} onClick={()=>setActiveTabs(1)}>
                                         Additional info
                                         </Button>
                                     </li>
                                     <li className='list list-inline-item'>
-                                        <Button className='active' onClick={()=>setActiveTabs(2)}>
+                                        <Button className={`${activeTabs ===2 && 'active'}`} onClick={()=>setActiveTabs(2)}>
                                         Reviews (3)
                                         </Button>
                                     </li>                            
@@ -546,7 +571,66 @@ const DetailsPage = () => {
 
                             </div>
                            
-                            <div className='col-md-3'>
+                            <div className='col-md-3 marginLeft'>
+
+                                <h4>Customer reviews</h4>
+                                <div className='d-flex align-items-center mt-3'>
+
+                                <Rating name="half-rating-read" defaultValue={4.8} precision={0.5} readonly/>
+                                    <strong className='marginLeft'>4.8 out of 5</strong>
+
+                                </div>
+
+                                <div className='progressBarBox d-flex align-items-center'>
+                                    <span style={{marginRight:'20px'}}>5 Star</span>
+                                    <div className='progress' style={{width:'80%',height:'25px'}}>
+                                        <div className='progress-bar bg-success' style={{width:'70%',height:'25px'}}>70%
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div className='progressBarBox d-flex align-items-center'>
+                                    <span style={{marginRight:'20px'}}>4 Star</span>
+                                    <div className='progress' style={{width:'80%',height:'25px'}}>
+                                        <div className='progress-bar bg-success' style={{width:'25%',height:'25px'}}>25%
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div className='progressBarBox d-flex align-items-center'>
+                                    <span style={{marginRight:'20px'}}>3 Star</span>
+                                    <div className='progress' style={{width:'80%',height:'25px'}}>
+                                        <div className='progress-bar bg-success' style={{width:'45%',height:'25px'}}>45%
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div className='progressBarBox d-flex align-items-center'>
+                                    <span style={{marginRight:'20px'}}>2 Star</span>
+                                    <div className='progress' style={{width:'80%',height:'25px'}}>
+                                        <div className='progress-bar bg-success' style={{width:'65%',height:'25px'}}>65%
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div className='progressBarBox d-flex align-items-center'>
+                                    <span style={{marginRight:'20px'}}>1 Star</span>
+                                    <div className='progress' style={{width:'80%',height:'25px'}}>
+                                        <div className='progress-bar bg-success' style={{width:'85%',height:'25px'}}>85%
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                                
 
@@ -561,8 +645,44 @@ const DetailsPage = () => {
                         
                         </div>
                   </div>
-                    
-                </div>
+
+                  <div className='relatedProducts pt-5 pb-4'>
+                  <h2 className='hd mb-0 mt-0 res-full'>Related Product</h2>
+                  <br/>
+
+                 
+                            <Slider {...related} className='prodSlider'>   
+                                                    
+                            <div className='item'>
+                             <Product tag="sale"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="hot"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="new"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="hot"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="sale"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="best"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="new"/>
+                            </div>
+                            <div className='item'>
+                             <Product tag="sale"/>
+                            </div>
+                
+                          </Slider>
+
+                            </div>
+
+                  </div>              
 
                
                 </section>
