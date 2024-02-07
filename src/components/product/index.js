@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './style.css'
 import Rating from '@mui/material/Rating';
 import { Button } from '@mui/material';
@@ -11,16 +11,43 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 
 
 const Product = (props) => {
-  return (
-    <div className='productThumb'>
-      {
-                props.tag !== null && props.tag !== undefined &&
-                <span className={`badge ${props.tag}`}>{props.tag}</span>
-            }
 
-       <Link>
+  const [productData, setProductData] = useState();
+
+  useEffect(() => {
+    setProductData(props.item);
+}, [props.item])
+
+const setProductCat=()=>{
+    sessionStorage.setItem('parentCat', productData.parentCatName);
+    sessionStorage.setItem('subCatName', productData.subCatName);
+}
+  return (
+    // <div className='productThumb'>
+    //   {
+    //             props.tag !== null && props.tag !== undefined &&
+    //             <span className={`badge ${props.tag}`}>{props.tag}</span>
+    //         }
+
+
+    <div className='productThumb' onClick={setProductCat}>
+        {
+            props.tag !== null && props.tag !== undefined &&
+            <span className={`badge ${props.tag}`}>{props.tag}</span>
+        }
+
+       {
+                productData !== undefined &&
+          
+        <>
+
+       <Link to={`/product/${productData.id}`}>
        <div className='imgWrapper'>
-            <img src="https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/product-1-1.jpg" className='w-100'/>
+            {/* <img src="https://wp.alithemes.com/html/nest/demo/assets/imgs/shop/product-1-1.jpg" className='w-100'/> */}
+            <div className='p-4 wrapper mb-3'>
+                  <img src={productData.catImg+'?im=Resize=(420,420)'} className='w-100' />
+            </div>
+
             <div className='overlay transition'>
              <ul className='list list-inline mb-5'>
                 <li className='list-inline-item'>
@@ -46,20 +73,27 @@ const Product = (props) => {
        </Link>
         <div className='info'>
             <span className='d-block brand'>
-              <Link>Snack</Link>
+              {/* <Link>Snack</Link> */}
+              <Link>{productData.brand}</Link>
               </span>
-            <h4 className='title'> Seeds of Change & Rice</h4>
-            <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
-           <span className='brand d-block'>By <a className='text-g'><Link>NestFood</Link></a></span>
+            {/* <h4 className='title'> Seeds of Change & Rice</h4> */}
+            <h4 className='title'> <Link>{productData.productName.substr(0,50)+'...'}</Link></h4>
+            {/* <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/> */}
+            <Rating name="half-rating-read" value={parseFloat(productData.rating)} precision={0.5} readonly/>
+           {/* <span className='brand d-block'>By <a className='text-g'><Link>NestFood</Link></a></span> */}
+           <span className='brand d-block text-g'>By <Link className='text-g'>{productData.brand}</Link></span>
 
            <div className='d-flex align-items-center justify-content-between '>
               <div className='d-flex align-items-center'>
-                <span className='price text-g font-weight-bold'>$28.95</span> <span className='oldPrice'>$32.8</span>
+                {/* <span className='price text-g font-weight-bold'>$28.95</span> <span className='oldPrice'>$32.8</span> */}
+                <span className='price text-g font-weight-bold'>Rs {productData.price}</span> <span className='oldPrice'>Rs {productData.oldPrice}</span>
               </div>
                  <Button className='bg-g transition'><ShoppingCartOutlinedIcon className='mr-2'/> Add</Button>
            </div>
 
         </div>
+        </>
+   }
       
     </div>
   )

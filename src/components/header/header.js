@@ -17,9 +17,10 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Nav from './nav/nav';
+import { Link } from 'react-router-dom';
 
 
-const Header = () => {
+const Header = (props) => {
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -94,7 +95,10 @@ const Header = () => {
     <div className='container-fluid'>
             <div className='row'>
                 <div className='col-sm-2 part1 d-flex align-items-center'>
+                    <Link to='/'>
                     <img src={Logo} className='logo' />
+                    </Link>
+                    
                 </div>
 
                     {/* headerSearch start here*/}
@@ -169,7 +173,7 @@ const Header = () => {
             </div>
         </div>  
      </header>
-     <Nav/>
+     <Nav data={props.data} />
     </div>
      
     </>

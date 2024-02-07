@@ -9,7 +9,7 @@ import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 
 
 const Listing = () => {
-    const { id } = useParams();
+    // const { id } = useParams();
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [isOpenDropDown2, setisOpenDropDown2] = useState(false);
