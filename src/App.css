@@ -15,10 +15,13 @@ body{font-family: 'Lato', sans-serif; font-size: 22px;}
 .btn-border:hover{border: 1px solid #3bb77e !important; background: #3bb77e !important; color: #fff !important;}
 .btn-border:hover svg{opacity: 1 !important;}
 .marginRight {
-  margin-right: 5em;
+  margin-right: 1em;
 }
 .marginLeft{
   margin-left: 1em;
+}
+.marginEnd{
+  margin-left: 40em;
 }
 
 .btn-g a{color: #fff !important; text-decoration: none !important;}

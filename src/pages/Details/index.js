@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState, } from 'react'
 import './style.css';
 import Rating from '@mui/material/Rating';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import Slider from "react-slick";
@@ -13,9 +13,11 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 // import Sidebar from '../../components/Sidebar/index';
 import Product from '../../components/product';
+import axios from 'axios';
+import { MyContext } from '../../App';
 
 
-const DetailsPage = () => {
+const DetailsPage = (props) => {
 
     const [zoomInage, setZoomImage] = useState('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg');
 
@@ -23,8 +25,36 @@ const DetailsPage = () => {
     const [smlImageSize, setSmlImageSize] = useState([150, 150]);
     const [activeSize, setActiveSize] = useState(0);
     const [inputValue, setinputValue] = useState(1);
-    const [activeTabs, setActiveTabs] = useState(2);
+    const [activeTabs, setActiveTabs] = useState(0);
+    const [currentProduct, setCurrentProduct] = useState({});
+    const [relatedProducts, setRelatedProducts] = useState([]);
+    const [reviewsArr, setReviewsArr] = useState([]);
+    const [rating, setRating] = useState(0.0);
+    const [isAlreadyAddedInCart, setisAlreadyAddedInCart] = useState(false);
 
+    const [isAdded, setIsadded] = useState(false);
+
+    const context = useContext(MyContext);
+
+    const [reviewFields, setReviewFields] = useState({
+        review: '',
+        userName: '',
+        rating: 0.0,
+        productId: 0,
+        date: ''
+    })
+
+    const [prodCat, setProdCat] = useState({
+        parentCat: sessionStorage.getItem('parentCat'),
+        subCatName: sessionStorage.getItem('subCatName')
+    })
+
+
+    const zoomSlider = useRef();
+    const zoomSliderBig = useRef();
+
+
+    let { id } = useParams();
 
     var settings2 = {
         dots: false,
@@ -62,15 +92,10 @@ const DetailsPage = () => {
         arrows: true
     };
 
-   const zoomSlider = useRef();
-   const zoomSliderBig = useRef();
+  
 
-    const goto = (url,index) => {
+    const goto = (index) => {
 
-        setTimeout(()=>{
-            setZoomImage(url);
-        },200);
-        
         zoomSlider.current.slickGoTo(index);
         zoomSliderBig.current.slickGoTo(index);
     }
@@ -89,65 +114,226 @@ const DetailsPage = () => {
         }
     }
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+
+        props.data.length !== 0 &&
+            props.data.map((item) => {
+                item.items.length !== 0 &&
+                    item.items.map((item_) => {
+                        item_.products.length !== 0 &&
+                            item_.products.map((product) => {
+                                if (parseInt(product.id) === parseInt(id)) {
+                                    setCurrentProduct(product);
+                                }
+                            })
+                    })
+            })
+
+
+ //related products code
+
+            const related_products = [];
+
+            props.data.length !== 0 &&
+                props.data.map((item) => {
+                    if (prodCat.parentCat === item.cat_name) {
+                        item.items.length !== 0 &&
+                            item.items.map((item_) => {
+                                if (prodCat.subCatName === item_.cat_name) {
+                                    item_.products.length !== 0 &&
+                                        item_.products.map((product, index) => {
+                                            if (product.id !== parseInt(id)) {
+                                                related_products.push(product)
+                                            }
+
+                                        })
+                                }
+                            })
+                    }
+
+                })
+                
+                if (related_products.length !== 0) {
+                    setRelatedProducts(related_products)
+                }
+             showReviews();
+         },[id]);
+
+
+
+                    const changeInput = (name, value) => {
+                        if (name === "rating") {
+                            setRating(value);
+                        }
+                        setReviewFields(() => ({
+                            ...reviewFields,
+                            [name]: value,
+                            productId: id,
+                            date: new Date().toLocaleString()
+                        }))
+                
+                
+                
+                    }
+                
+
+                    const reviews_Arr = [];
+
+                    const submitReview = async (e) => {
+                        // console.log('hero')
+                        e.preventDefault();
+        
+                        try {
+                
+                            await axios.post("http://localhost:2000/productReviews", reviewFields).then((response) => {
+                                // console.log(response.data)
+                                reviews_Arr.push(response.data);
+
+                                setReviewFields(() => ({
+                                    review: '',
+                                    userName: '',
+                                    rating: 0.0,
+                                    productId: 0,
+                                    date: ''
+                                }))
+                            })
+                
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                
+                        showReviews();
+                    }
+
+                    var reviews_Arr2 = [];
+                    const showReviews = async () => {
+                        try {
+                            await axios.get("http://localhost:2000/productReviews").then((response) => {
+                                // console.log(response.data.length);
+
+                                if (response.data.length !== 0) {
+                                    // console.log(response.data);
+                                     response.data.map((item) => {
+                                        if (parseInt(item.productId) === parseInt(id)) {                                           
+                                            reviews_Arr2.push(item)
+                                        }
+                
+                                    })
+                
+                                }
+                            })
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                
+                        if (reviews_Arr2.length !== 0) {
+                
+                            setReviewsArr(reviews_Arr2);
+                        }
+                        // console.log(reviewsArr);
+                
+                    }
+
+                    const addToCart = (item) => {
+                        // console.log(item)
+
+                        context.addToCart(item);
+                        setIsadded(true);
+                    }
+
+
+                    const getCartData = async (url) => {
+                        try {
+                            await axios.get(url).then((response) => {
+                            
+                
+                                response.data.length!==0 && response.data.map((item)=>{
+                                    
+                                    if(parseInt(item.id)===parseInt(id)){
+                                        setisAlreadyAddedInCart(true);
+                                    }
+                                })
+                            })
+                
+                        } catch (error) {
+                            console.log(error.message);
+                        }
+                    }  
+
 
   return (
+
+    <>  
+    {
+        context.windowWidth < 992 && <Button className={`btn-g btn-lg w-100 filterBtn {isAlreadyAddedInCart===true && 'no-click'}`} onClick={() => addToCart(currentProduct)}><ShoppingCartOutlinedIcon />
+            {
+                isAdded === true || isAlreadyAddedInCart===true  ? 'Added' : 'Add To Cart'
+            }
+        </Button>
+
+    }
+
+
     <section className="detailsPage mb-5">
-               
-                    
+                                 
             <div className='breadcrumbWrapper mb-4'>
                 <div className='container-fluid detailsContainer'>
                     <ul className="breadcrumb breadcrumb2 mb-0">
                         <li><Link>Home</Link>  </li>
-                        <li><Link className='text-capitalize'>Vegetables </Link> </li>
+                        <li><Link to={`/cat/${prodCat.parentCat.split(' ').join('-').toLowerCase()}`}
+                                    onClick={() => sessionStorage.setItem('cat', prodCat.parentCat.split(' ').join('-').toLowerCase())} className='text-capitalize'>{prodCat.parentCat}</Link> </li>
 
-                        <li><Link className='text-capitalize'>Seeds of Change Organic </Link> </li>
-                        <li></li>
+                                <li><Link to={`/cat/${prodCat.parentCat.toLowerCase()}/${prodCat.subCatName.replace(/\s/g, '-').toLowerCase()}`}
+                                    onClick={() => sessionStorage.setItem('cat', prodCat.subCatName.toLowerCase())} className='text-capitalize'>{prodCat.subCatName}</Link> </li>
+                                <li>{currentProduct.productName}</li>
+                        
                     </ul>
                 </div>
 
             </div>
+            
 
                 <div className='container-fluid'>
                    <div className='row pt-3 pb-3'>
                    <div className='row'>
+
                                 {/* Product Zoom code Start here */}
 
                                 <div className='col-md-5 '>
                                     <div className='productZoom'>
-                                    <Slider {...settings2} className='zoomSliderBig' ref={zoomSliderBig}>
+                                            <Slider {...settings2} className='zoomSliderBig' ref={zoomSliderBig}>
 
-                               <div className='item'>
-                                    <InnerImageZoom zoomType="hover" zoomScale={1}	src={`${zoomInage}?im=Resize=(${bigImageSize[0]},${bigImageSize[0]})`} />
-                               </div>
-                               <div className='item'>
-                                    <InnerImageZoom zoomType="hover" zoomScale={1}	src={`${zoomInage}?im=Resize=(${bigImageSize[0]},${bigImageSize[0]})`} />
-                               </div>
-                               <div className='item'>
-                                    <InnerImageZoom zoomType="hover" zoomScale={1}	src={`${zoomInage}?im=Resize=(${bigImageSize[0]},${bigImageSize[0]})`} />
-                               </div>
-                               <div className='item'>
-                                    <InnerImageZoom zoomType="hover" zoomScale={1}	src={`${zoomInage}?im=Resize=(${bigImageSize[0]},${bigImageSize[0]})`} />
-                               </div>
-                                    
-                                  </Slider>
+                                            {
+                                                currentProduct.productImages !== undefined &&
+                                                currentProduct.productImages.map((imgUrl, index) => {
+                                                    return (
+                                                        <div className='item'>
+                                                            <InnerImageZoom
+                                                                zoomType="hover" zoomScale={1}
+                                                                src={`${imgUrl}?im=Resize=(${bigImageSize[0]},${bigImageSize[1]})`} />
+
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                            
+                                        </Slider>
                                     </div>
 
                                     <Slider {...settings} className='zoomSlider' ref={zoomSlider}>
-                                    <div className='item w-100'>
-                                        <img src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`} className='w-100' onClick={() => goto('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-0-202305292130.jpg',0)}/>
-                                  </div>
-                                    <div className='item'>
-                                        <img src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-1-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}className='w-100' onClick={() => goto('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-1-202305292130.jpg',1)} />
-                                  </div>
-                                    <div className='item'>
-                                        <img src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-2-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`} className='w-100' onClick={() => goto('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-2-202305292130.jpg',2)}/>
-                                  </div>
-                                    <div className='item'>
-                                        <img src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-3-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`} className='w-100' onClick={() => goto('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-product-images-o490000363-p490000363-3-202305292130.jpg',3)} />
-                                  </div>
-                                    <div className='item'>
-                                        <img src={`https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`} className='w-100' onClick={() => goto('https://www.jiomart.com/images/product/original/490000363/maggi-2-minute-masala-noodles-70-g-legal-images-o490000363-p490000363-4-202305292130.jpg',4)} />
-                                  </div>
+
+                                    {
+                                    currentProduct.productImages !== undefined &&
+                                    currentProduct.productImages.map((imgUrl, index) => {
+                                        return (
+                                            <div className='item'>
+                                                <img src={`${imgUrl}?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`} className='w-100'
+                                                    onClick={() => goto(index)} />
+                                            </div>
+                                        )
+                                    })
+                                }
 
                                     </Slider>
 
@@ -162,45 +348,70 @@ const DetailsPage = () => {
 
                     <div className='col-md-7 productInfo'>
 
-                        <h1>Seeds of Change Organic Quinoa, Brown</h1>
+                        <h1>{currentProduct.productName}</h1>
                         <div className='d-flex align-items-center'>
-                        <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
+                        <Rating name="half-rating-read" value={parseFloat(currentProduct.rating)} precision={0.5} readOnly />
                          <span className='text-dark'>(32 reviews)</span>
 
                         </div>
                         <div className='priceSec d-flex align-items-center'>
-                            <span className='text-g priceLarge'> $38</span>
+                            <span className='text-g priceLarge'>Rs {currentProduct.price}</span>
                             <div className='Margin d-flex flex-column'>
-                            <span className='text-org'>26%</span>
-                            <span className='text-light oldPrice'>$52</span>
+                            <span className='text-org'>{currentProduct.discount}% Off</span>
+                            <span className='text-light oldPrice'>Rs {currentProduct.oldPrice}</span>
 
                             </div>
 
                         </div>
-                         <p> 
-                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
-                           </p>
-                         <p> 
-                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
-                           </p>
-                         <p> 
-                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
-                           </p>
-                         <p> 
-                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
-                           </p>
-                         <p> 
-                         Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi.
-                           </p>
-                           <div className='productSize d-flex align-items-center'>
-                            <span>Size/Weight:</span>
-                            <ul className='list list-inline mb-0 Margin'>  
-                             <li className='list list-inline-item'><a className={`tag ${activeSize === 0 ? 'active' : ''}`} onClick={()=>isActive(0)}> 50 g </a> </li>
-                             <li className='list list-inline-item'><a className={`tag ${activeSize === 1 ? 'active' : ''}`} onClick={ ()=>isActive(1)}> 80 g </a> </li>
-                             <li className='list list-inline-item'><a className={`tag ${activeSize === 2 ? 'active' : ''}`} onClick={()=> isActive(2)}> 100 g </a> </li>
-                             <li className='list list-inline-item'><a className={`tag ${activeSize === 3 ? 'active' : ''}`} onClick={()=> isActive(3)}> 150 g </a> </li>
-                        </ul>
-                           </div>
+                        <p>{currentProduct.description}</p>
+
+                        {
+                                currentProduct.weight !== undefined && currentProduct.weight.length !== 0 &&
+                                <div className='productSize d-flex align-items-center'>
+                                    <span>Size / Weight:</span>
+                                    <ul className='list list-inline mb-0 pl-4 marginLeft'>
+                                        {
+                                            currentProduct.weight.map((item, index) => {
+                                                return (
+                                                    <li className='list-inline-item'><a className={`tag ${activeSize === index ? 'active' : ''}`} onClick={() => isActive(index)}>{item}g</a></li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            }
+
+                        {
+                                currentProduct.RAM !== undefined && currentProduct.RAM.length !== 0 &&
+                                <div className='productSize d-flex align-items-center'>
+                                    <span>RAM:</span>
+                                    <ul className='list list-inline mb-0 pl-4'>
+                                        {
+                                            currentProduct.RAM.map((RAM, index) => {
+                                                return (
+                                                    <li className='list-inline-item'><a className={`tag ${activeSize === index ? 'active' : ''}`} onClick={() => isActive(index)}>{RAM} GB</a></li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            }
+
+                           {
+                                currentProduct.SIZE !== undefined && currentProduct.SIZE.length !== 0 &&
+                                <div className='productSize d-flex align-items-center'>
+                                    <span>SIZE:</span>
+                                    <ul className='list list-inline mb-0 pl-4'>
+                                        {
+                                            currentProduct.SIZE.map((SIZE, index) => {
+                                                return (
+                                                    <li className='list-inline-item'><a className={`tag ${activeSize === index ? 'active' : ''}`} onClick={() => isActive(index)}>{SIZE}</a></li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                </div>
+                            }
 
                            <div className='addCartSection pt-4 pb-4 d-flex align-items-center'>
 
@@ -212,7 +423,17 @@ const DetailsPage = () => {
                             </div>
                             <div className='d-flex align-items-center'>
 
-                            <Button className='btn-g btn-lg Margin addtocartbtn'><ShoppingCartOutlinedIcon /> Add to Cart</Button>
+                            {
+                                        context.windowWidth > 992 && <Button className={`btn-g btn-lg addtocartbtn ${isAlreadyAddedInCart===true && 'no-click'}`} onClick={() => addToCart(currentProduct)}><ShoppingCartOutlinedIcon />
+                                            {
+                                                isAdded === true || isAlreadyAddedInCart===true ? 'Added' : 'Add To Cart'
+                                            }
+                                        </Button>
+
+                                    }
+
+
+                            {/* <Button className='btn-g btn-lg Margin addtocartbtn'><ShoppingCartOutlinedIcon /> Add to Cart</Button> */}
 
                             <Button className=' btn-lg addtocartbtn  Margin  wishlist btn-border'><FavoriteBorderOutlinedIcon /> </Button>
                                     <Button className=' btn-lg addtocartbtn Margin btn-border'><CompareArrowsIcon /></Button>
@@ -221,7 +442,7 @@ const DetailsPage = () => {
 
                     </div>
                     
-                                  {/* ProductInfo code end here */}
+                            {/* ProductInfo code end here */}
 
                       </div>
 
@@ -255,24 +476,22 @@ const DetailsPage = () => {
                                 activeTabs === 0 &&
                                 <div className='tabContent'>
 
-                                <p>Uninhibited carnally hired played in whimpered dear gorilla koala depending and much yikes off far quetzal goodness and from for grimaced goodness unaccountably and meadowlark near unblushingly crucial scallop tightly neurotic hungrily some and dear furiously this apart.</p>
-                                <p>
-                                Spluttered narrowly yikes left moth in yikes bowed this that grizzly much hello on spoon-fed that alas rethought much decently richly and wow against the frequent fluidly at formidable acceptably flapped besides and much circa far over the bucolically hey precarious goldfinch mastodon goodness gnashed a jellyfish and one however because.
-                                </p>
+                                 <p>{currentProduct.description}</p>
+
                                 <ul>
-                                    <li className='d-flex align-items-center ml-auto'>
+                                    <li className='d-flex align-items-center marginRight'>
                                       Type Of Packing
                                       <span className='marginRight'>Bottle</span>
                                     </li>
-                                    <li className='d-flex align-items-center ml-auto'>
+                                    <li className='d-flex align-items-center marginRight'>
                                       Type Of Packing
                                       <span className='marginRight'>Bottle</span>
                                     </li>
-                                    <li className='d-flex align-items-center ml-auto'>
+                                    <li className='d-flex align-items-center marginRight'>
                                       Type Of Packing
                                       <span className='marginRight'>Bottle</span>
                                     </li>
-                                    <li className='d-flex align-items-center ml-auto'>
+                                    <li className='d-flex align-items-center marginRight'>
                                       Type Of Packing
                                       <span className='marginRight'>Bottle</span>
                                     </li>
@@ -296,14 +515,11 @@ const DetailsPage = () => {
                                 <h2>Suggested Use</h2>
                                 <hr className=''/>
                                 <p>
-                                Refrigeration not necessary.
+                                    Refrigeration not necessary.
                                 </p>
                                 <p>
-                                   Stir before serving                                
+                                    Stir before serving                                
                                 </p>
-
-
-
 
                             </div>
                                
@@ -413,124 +629,58 @@ const DetailsPage = () => {
                         }
 
                        {
-                        activeTabs === 2 &&
-                     <div className='tabContent'>                       
-                        <div className='row'>
-                            <div className='col-md-8'>
-                                <h3>Customer questions & answers</h3>
-                                <br/>
+                                activeTabs === 2 &&
+                            <div className='tabContent'>                       
+                                <div className='row'>
+                                    <div className='col-md-8'>
+                                        <h3>Customer questions & answers</h3>
 
-                                <div className='card p-3 flex-row mb-5'> 
+                                        <br/>
+                                        {/* {console.log( reviewsArr.length)} */}
+                                                           
 
-                                <div className='image'>
-                                        <div className='rounded-circle reviewCard'>
-                                            <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/blog/author-2.png' />
+                                        {
+                                                reviewsArr.length !== 0 && 
+                                                reviewsArr.map((item, index) => {
 
-                                        </div>
-
-                                        <span className='text-g d-block text-center'>Sienna </span>
-
-                                </div>
-
-                                <div className='info pl-5 marginLeft'>
-                                    <h5 className='text-light d-flex align-items-center justify-content-between'>
-                                        December 4, 2022 at 3:12 pm 
-                                        <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
-                                    </h5>
-                                    <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, suscipit exercitationem accusantium obcaecati quos voluptate nesciunt facilis itaque modi commodi dignissimos sequi repudiandae minus ab deleniti totam officia id incidunt?
-                                    </p>
+                                                    return (
+                                                       
+                                                        <div className='card p-4 reviewsCard flex-row' key={index}>
+                                                            
+                                                            <div className='image'>
+                                                                <div className='rounded-circle'>
+                                                                    <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/blog/author-2.png' />
+                                                                </div>
+                                                                <span className='text-g d-block text-center font-weight-bold'>{item.userName}</span>
+                                                            </div>
 
 
-                                </div>
-                                
-                                
-                                </div>
-                                <div className='card p-3 flex-row mt-5'> 
+                                                            <div className='info pl-5'>
+                                                                <div className='d-flex align-items-center w-100'>
+                                                                    <h5 className='text-light Margin'>{item.date}</h5>
+                                                                    <div className='marginReview'>
+                                                                        <Rating name="half-rating-read"
+                                                                            value={parseFloat(item.rating)} precision={0.5} readOnly />
+                                                                    </div>
+                                                                </div>
 
-                                <div className='image'>
-                                        <div className='rounded-circle reviewCard'>
-                                            <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/blog/author-2.png' />
+                                                                <p className='marginLeft'>{item.review} </p>
+                                                            </div>
 
-                                        </div>
-
-                                        <span className='text-g d-block text-center'>Sienna </span>
-
-                                </div>
-
-                                <div className='info pl-5 marginLeft'>
-                                    <h5 className='text-light d-flex align-items-center justify-content-between'>
-                                        December 4, 2022 at 3:12 pm 
-                                        <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
-                                    </h5>
-                                    <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, suscipit exercitationem accusantium obcaecati quos voluptate nesciunt facilis itaque modi commodi dignissimos sequi repudiandae minus ab deleniti totam officia id incidunt?
-                                    </p>
+                                                        </div>
+                                                    )
 
 
-                                </div>
-                                
-                                
-                                </div>
-                                <div className='card p-3 flex-row mt-5'> 
-
-                                <div className='image'>
-                                        <div className='rounded-circle reviewCard'>
-                                            <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/blog/author-2.png' />
-
-                                        </div>
-
-                                        <span className='text-g d-block text-center'>Sienna </span>
-
-                                </div>
-
-                                <div className='info pl-5 marginLeft'>
-                                    <h5 className='text-light d-flex align-items-center justify-content-between'>
-                                        December 4, 2022 at 3:12 pm 
-                                        <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
-                                    </h5>
-                                    <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, suscipit exercitationem accusantium obcaecati quos voluptate nesciunt facilis itaque modi commodi dignissimos sequi repudiandae minus ab deleniti totam officia id incidunt?
-                                    </p>
-
-
-                                </div>
-                                
-                                
-                                </div>
-                                <div className='card p-3 flex-row mt-5'> 
-
-                                <div className='image'>
-                                        <div className='rounded-circle reviewCard'>
-                                            <img src='https://wp.alithemes.com/html/nest/demo/assets/imgs/blog/author-2.png' />
-
-                                        </div>
-
-                                        <span className='text-g d-block text-center'>Sienna </span>
-
-                                </div>
-
-                                <div className='info pl-5 marginLeft'>
-                                    <h5 className='text-light d-flex align-items-center justify-content-between'>
-                                        December 4, 2022 at 3:12 pm 
-                                        <Rating name="half-rating-read" defaultValue={3.5} precision={0.5} readonly/>
-                                    </h5>
-                                    <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, suscipit exercitationem accusantium obcaecati quos voluptate nesciunt facilis itaque modi commodi dignissimos sequi repudiandae minus ab deleniti totam officia id incidunt?
-                                    </p>
-
-
-                                </div>
-                                
-                                
-                                </div>
+                                                })
+                                            }
+                     
                                 <br/>
                                 <br/>
 
-                                <form className='reviewForm'>
+                                <form className='reviewForm' onSubmit={submitReview}>
                                     <h4>Add a review</h4>
                                     <div className='form-group'>
-                                        <textarea className='form-control' placeholder='Write Comment'>
+                                        <textarea className='form-control' placeholder='Write Comment' name="review" value={reviewFields.review} onChange={(e) => changeInput(e.target.name, e.target.value)}>
 
                                         </textarea>
 
@@ -539,7 +689,7 @@ const DetailsPage = () => {
                                     <div className='row'>
                                         <div className='col-md-6'>
                                             <div className='form-group'>
-                                                <input type='text' className='form-control' placeholder='Name'/>
+                                            <input type='text' value={reviewFields.userName} className='form-control' placeholder='Name' name='userName' onChange={(e) => changeInput(e.target.name, e.target.value)} />
 
                                             </div>
 
@@ -547,27 +697,22 @@ const DetailsPage = () => {
 
                                         <div className='col-md-6'>
                                             <div className='form-group'>
-                                                <input type='text' className='form-control'placeholder='Email' />
-
+                                            <Rating name="rating" value={rating} precision={0.5} onChange={(e) => changeInput(e.target.name, e.target.value)} />
                                             </div>
 
                                         </div>
 
-                                        <div className='form-group'>
+                                        {/* <div className='form-group'>
                                                 <input type='text' className='form-control' placeholder='Website' />
 
-                                            </div>
-                                        <div className='form-group'>
-                                                <Button className='btn-g btn-lg'>Submit Review</Button>
+                                            </div> */}
+                                           <div className='form-group'>
+                                                <Button type='submit' className='btn-g btn-lg'>Submit Review</Button>
 
                                             </div>
 
                                     </div>
                                 </form>
-
-
-
-
 
                             </div>
                            
@@ -652,8 +797,22 @@ const DetailsPage = () => {
 
                  
                             <Slider {...related} className='prodSlider'>   
+
+
+                            {
+
+                                    relatedProducts.length !== 0 &&
+                                    relatedProducts.map((product, index) => {
+
+                                        return (
+                                            <div className='item' key={index}>
+                                                <Product tag={product.type} item={product} />
+                                            </div>
+                                        )
+                                    })
+                            }
                                                     
-                            <div className='item'>
+                            {/* <div className='item'>
                              <Product tag="sale"/>
                             </div>
                             <div className='item'>
@@ -676,7 +835,7 @@ const DetailsPage = () => {
                             </div>
                             <div className='item'>
                              <Product tag="sale"/>
-                            </div>
+                            </div> */}
                 
                           </Slider>
 
@@ -686,6 +845,7 @@ const DetailsPage = () => {
 
                
                 </section>
+    </>
   )
 }
 

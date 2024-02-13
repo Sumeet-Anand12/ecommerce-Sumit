@@ -88,6 +88,7 @@ useEffect(() => {
             })
 
         })
+        // console.log(arr)
 
 }, [activeTab, activeTabData])
 
@@ -127,7 +128,7 @@ useEffect(() => {
       <CatSlider data={prodData} />
       <Banners/>
       
-      <section className='homeProducts'>
+      <section className='homeProducts homeProductWrapper '>
                 <div className='container-fluid'>
                     <div className='d-flex align-items-center justify-content-between '>
                         <h2 className='hd mb-0 mt-0 res-full'>Popular Products</h2>

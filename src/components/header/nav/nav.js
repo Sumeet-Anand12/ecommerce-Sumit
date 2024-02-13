@@ -24,10 +24,7 @@ const Nav = (props) => {
     setNavData(props.data);
 }, [])
 
-    const openDropdownFun=(index)=>{
-      setDropdownMenu(!openDropdownMenu)
-      setDropdownMenuIndex(index)
-  }
+    
   useEffect(() => {
     setIsOpenNav(props.openNav)
 }, [props.openNav])
@@ -36,6 +33,12 @@ const Nav = (props) => {
 const closeNav=()=>{
     props.closeNav();
 }
+
+const openDropdownFun=(index)=>{
+  setDropdownMenu(!openDropdownMenu)
+  setDropdownMenuIndex(index)
+}
+
   return (
 
     <>
@@ -60,7 +63,7 @@ const closeNav=()=>{
                   <li className='list-inline-item'>
                     <Button><Link to='/'>Home</Link></Button>
                   </li>
-                  {
+                               {
                                         navData.length !== 0 &&
                                         navData.map((item, index) => {
                                             return (
@@ -124,30 +127,30 @@ const closeNav=()=>{
                         <div className={`dropdown_menu megaMenu w-100 ${openMegaMenu===true && 'open'}`}>
                                   <div className='row'>
 
-                                                {
-                                                    props.data.length !== 0 &&
-                                                    props.data.map((item, index) => {
-                                                        return (
-                                                            <div className='col'>
-                                                                <a href={`/cat/${item.cat_name.toLowerCase()}`}> <h4 className='text-g text-capitalize'>{item.cat_name}</h4></a>
-                                                                {
-                                                                    item.items.length !== 0 &&
-                                                                    <ul className='mt-4 mb-0'>
-                                                                        {
-                                                                            item.items.map((item_, index) => {
-                                                                                return (
-                                                                                    <li>
-                                                                                        <Link onClick={props.closeNav} to={`/cat/${item.cat_name.toLowerCase()}/${item_.cat_name.replace(/\s/g, '-').toLowerCase()}`}>{item_.cat_name}</Link>
-                                                                                    </li>
-                                                                                )
-                                                                            })
-                                                                        }
-                                                                    </ul>
-                                                                }
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
+                                            {
+                                                props.data.length !== 0 &&
+                                                props.data.map((item, index) => {
+                                                    return (
+                                                        <div className='col'>
+                                                            <a href={`/cat/${item.cat_name.toLowerCase()}`}> <h4 className='text-g text-capitalize'>{item.cat_name}</h4></a>
+                                                            {
+                                                                item.items.length !== 0 &&
+                                                                <ul className='mt-4 mb-0'>
+                                                                    {
+                                                                        item.items.map((item_, index) => {
+                                                                            return (
+                                                                                <li>
+                                                                                    <Link onClick={props.closeNav} to={`/cat/${item.cat_name.toLowerCase()}/${item_.cat_name.replace(/\s/g, '-').toLowerCase()}`}>{item_.cat_name}</Link>
+                                                                                </li>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </div>
+                                                    )
+                                                })
+                                            }
 
 
 
@@ -209,7 +212,7 @@ const closeNav=()=>{
                   <li className='list-inline-item'>
                     <Button><Link to='/blog'>Blog</Link></Button>
                   </li>
-                  <li className='list-inline-item'>
+                  {/* <li className='list-inline-item'>
                     <Button><Link to='/pages'>Pages <KeyboardArrowDownIcon className='arrow' /></Link></Button>
                   <div className='dropdown_menu'>
                   <ul>
@@ -250,7 +253,7 @@ const closeNav=()=>{
 
                   </div>
                  
-                  </li>
+                  </li> */}
                   <li className='list-inline-item'>
                     <Button><Link to='/contact'>Contact  </Link></Button>
                   </li>

@@ -3,7 +3,7 @@ import '../header/header.css';
 import Logo from '../../assets/images/logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
 import Select from '../selectDrop/select';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import IconCompare from '../../assets/images/icon-compare.svg';
@@ -20,12 +20,22 @@ import Nav from './nav/nav';
 import { Link } from 'react-router-dom';
 
 
+import { MyContext } from '../../App';
+
+
 const Header = (props) => {
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const headerRef = useRef();
+    const context = useContext(MyContext);
+   
+    useEffect(() => {
+
+    }, [context.cartItems])
+
+    
 
     const [categories, setcategories] = useState([
         'Milks and Dairies',
@@ -138,14 +148,12 @@ const Header = (props) => {
                                                 </span>
                                             </li>
                                             <li className='list-inline-item'>
-                                                <span>
-                                                    {/* <Link to={'/cart'}>  */}
-                                                    <img src={IconCart} />
+                                            <span>
+                                                    <Link to={'/cart'}> <img src={IconCart} />
                                                         <span className='badge bg-success rounded-circle'>
-                                                            {/* {context.cartItems.length} */}
+                                                            {context.cartItems.length}
                                                         </span>
-                                                        Cart
-                                                        {/* </Link> */}
+                                                        Cart</Link>
                                                 </span>
                                             </li>
                                             <li className='list-inline-item'>

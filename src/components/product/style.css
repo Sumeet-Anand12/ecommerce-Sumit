@@ -1,7 +1,9 @@
-.productThumb{width: 100%; height: auto;  border: 1px solid rgba(0,0,0,0.1); overflow: hidden; border-radius: 15px; padding:25px; transition: all 0.3s ease-in-out; position: relative;}
+.productThumb{width: 100%; height: auto;  border: 1px solid rgba(0,0,0,0.1); overflow: hidden; border-radius: 15px; padding:10px; transition: all 0.3s ease-in-out; position: relative;}
 .productThumb .imgWrapper{width: 100%; overflow: hidden; position: relative;}
 .productThumb .imgWrapper .wrapper{height: 350px; overflow: hidden;}
 .productThumb .imgWrapper img{ transition: all 0.3s ease-in-out;  }
+
+.productThumb:hover .imgWrapper .overlay{opacity: 1; transform: scale(1); }
 
 .productThumb .badge{position: absolute; top: 0px; left: 0px; display: inline-block;
     background: red; z-index: 10; color: #fff; padding: 10px 25px; font-size: 16px;
@@ -13,9 +15,9 @@
     .productThumb .badge.best{background: #f59758 !important;}
     
 
-.productThumb:hover .imgWrapper img{
+/* .productThumb:hover .imgWrapper img{
     transform: scale(1.1);
-}
+} */
 
 .productThumb .imgWrapper .overlay{
     position: absolute; 
@@ -42,7 +44,7 @@
     opacity: 1; 
     transform: scale(1); 
 }
-.productThumb .imgWrapper .overlay ul li a{display: block; padding: 10px; border-right:  1px solid #BCE3C9;}
+.productThumb .imgWrapper .overlay ul li a{display: block; padding: 1px; border-right:  1px solid #BCE3C9;}
 .productThumb .imgWrapper .overlay ul li a svg{color: #3bb77e !important;}
 .productThumb .imgWrapper .overlay ul li a:hover svg{color: #000 !important; opacity: 0.7;}
 
@@ -81,8 +83,8 @@
      color: #fff !important;}
 
      .productThumb .price{
-    font-size: 25px;
-      margin-right: 20px;
+     font-size: 25px;
+      margin-right: 15px !important;
      }
      .productThumb .oldPrice{
       font-size: 20px;
