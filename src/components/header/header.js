@@ -3,8 +3,9 @@ import '../header/header.css';
 import Logo from '../../assets/images/logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
 import Select from '../selectDrop/select';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
+import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import IconCompare from '../../assets/images/icon-compare.svg';
 import IconHeart from '../../assets/images/icon-heart.svg';
@@ -17,14 +18,63 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import Nav from './nav/nav';
+import { Link } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import { useNavigate } from 'react-router-dom';
 
 
-const Header = () => {
+import { MyContext } from '../../App';
+
+
+const Header = (props) => {
 
     const [isOpenDropDown, setisOpenDropDown] = useState(false);
+    const [isOpenAccDropDown, setisOpenAccDropDown] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [isopenSearch, setOpenSearch] = useState(false);
+    const [isOpenNav, setIsOpenNav] = useState(false);
+   
+
+
+    const openSearch = () => {
+        // alert(isopenSearch);
+        setOpenSearch(true);
+        searchInput.current.focus();
+    }
+
+    const closeSearch = () => {
+        setOpenSearch(false);
+        searchInput.current.blur();
+        searchInput.current.value = "";
+    }
+
+    const openNav=()=>{
+        setIsOpenNav(true);    
+        context.setIsopenNavigation(true)    
+
+    }
+    
+    const closeNav =()=>{
+        setIsOpenNav(false);
+        setisOpenAccDropDown(false);
+        context.setIsopenNavigation(false)
+    }
 
     const headerRef = useRef();
+    const searchInput = useRef()
+
+    const context = useContext(MyContext);
+    const history = useNavigate();
+   
+    useEffect(() => {
+        //  alert(window.innerWidth);
+        // alert(isopenSearch);
+
+    }, [context.cartItems])
+
+    
 
     const [categories, setcategories] = useState([
         'Milks and Dairies',
@@ -85,6 +135,15 @@ const Header = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const signOut = () => {
+        context.signOut();
+        history('/');
+    }
+
+
+
+    
     
   return (
     <>
@@ -94,24 +153,81 @@ const Header = () => {
     <div className='container-fluid'>
             <div className='row'>
                 <div className='col-sm-2 part1 d-flex align-items-center'>
+                    <Link to='/'>
                     <img src={Logo} className='logo' />
+                    </Link>
+                    {
+                                windowWidth < 992 &&
+
+                                <div className='ml-auto d-flex align-items-center'>
+                                   
+                                    <div className='navbarToggle mr-1' onClick={openSearch}><SearchIcon /></div>
+
+                                    <ul className='list list-inline mb-0 headerTabs pl-0 mr-2'>
+
+                                            <li className='list-inline-item'>
+                                                <span className='mrCart'>
+                                                    <Link to={'/cart'}> <img src={IconCart} />
+                                                        <span className='badge bg-success rounded-circle'>
+                                                            {context.cartItems.length}
+                                                        </span>
+                                                    </Link>
+                                                </span>
+                                            </li>
+
+
+                                    </ul>
+
+                                    <div className='navbarToggle mrCart' onClick={openNav}><MenuIcon /></div>
+
+                                    {
+                                            context.isLogin === "true" &&
+                                            <div className='myAccDrop' onClick={() => setisOpenAccDropDown(!isOpenAccDropDown)}><PersonOutlineOutlinedIcon /></div>
+                                        }
+                                </div>
+                
+
+
+
+                    }
+                    
+                    
                 </div>
 
                     {/* headerSearch start here*/}
-                        <div className='col-sm-5'>
-                                <div className='headerSearch d-flex align-items-center'>
+                        <div className='col-sm-5 part2'>
+                                <div className={`headerSearch d-flex align-items-center ${isopenSearch === true ? 'open' : ''}`}>
+                                    
+                                {
+                                        windowWidth < 992 && <div class="closeSearch" onClick={closeSearch}><ArrowBackIosIcon /></div>
+                                    }
+
+                                            {
+
+                                            windowWidth < 992 &&
+
+
+                                            <div className='countryWrapper w-100'>
+                                                <div className='respLocation'>
+                                                <Select data={countryList} placeholder={'Your Location'} icon={ <LocationOnOutlinedIcon style={{opacity:'0.5'}}/>} />
+
+                                                </div>
+
                                             
+                                            </div>
+                                            }
+
                                                 <Select data={categories} placeholder={'All Categories'} icon={false}/>
 
                                             <div className='search'>
-                                                <input type='text' placeholder='search for items...'/>
+                                                <input type='text' placeholder='Search for items...'  ref={searchInput}/>
                                                 <SearchIcon className="searchIcon cursor" />
                                             </div>
                                 </div>
                       </div>
                       {/* headerSearch end here*/}
 
-                      <div className='col-sm-5 d-flex align-items-center'>
+                      <div className='col-sm-5 d-flex align-items-center part3 res-hide'>
                    <div className='ml-auto d-flex align-items-center'>
                             <div className='countryWrapper'>
                                 
@@ -134,17 +250,15 @@ const Header = () => {
                                                 </span>
                                             </li>
                                             <li className='list-inline-item'>
-                                                <span>
-                                                    {/* <Link to={'/cart'}>  */}
-                                                    <img src={IconCart} />
+                                            <span>
+                                                    <Link to={'/cart'}> <img src={IconCart} />
                                                         <span className='badge bg-success rounded-circle'>
-                                                            {/* {context.cartItems.length} */}
+                                                            {context.cartItems.length}
                                                         </span>
-                                                        Cart
-                                                        {/* </Link> */}
+                                                        Cart</Link>
                                                 </span>
                                             </li>
-                                            <li className='list-inline-item'>
+                                            {/* <li className='list-inline-item'>
                                                <span onClick={() => setisOpenDropDown(!isOpenDropDown)}>
                                                     <img src={IconUser} />
                                                     Account
@@ -161,7 +275,42 @@ const Header = () => {
                                                     </ul>
                                                   }
                                                   
-                                                </li>
+                                                </li> */}
+
+                                           {
+                                                context.isLogin === "true" ?
+
+                                                    <li className='list-inline-item'>
+
+                                                        <span onClick={() => setisOpenDropDown(!isOpenDropDown)}>
+                                                            <img src={IconUser} />
+                                                            Account
+                                                        </span>
+
+                                                        {
+                                                            isOpenDropDown !== false &&
+                                                            <ul className='dropdownMenu'>
+                                                                <li><Button className='align-items-center'><Person2OutlinedIcon /> My Account</Button></li>
+                                                                <li><Button><LocationOnOutlinedIcon /> Order Tracking</Button></li>
+                                                                <li><Button><FavoriteBorderOutlinedIcon /> My Wishlist</Button></li>
+                                                                <li><Button><SettingsOutlinedIcon /> Setting</Button></li>
+                                                                <li><Button onClick={signOut}><LogoutOutlinedIcon /> Sign out</Button></li>
+                                                            </ul>
+                                                        }
+                                                    </li>
+
+                                                    :
+
+
+                                                    <li className='list-inline-item'>
+                                                        <Link to={'/signIn'}>
+                                                            <Button className="btn btn-g">Sign In</Button>
+                                                        </Link>
+                                                    </li>
+
+
+                                            }
+
                       </ul> 
                       </ClickAwayListener> 
                       </div>
@@ -169,8 +318,27 @@ const Header = () => {
             </div>
         </div>  
      </header>
-     <Nav/>
+       <Nav data={props.data}  openNav={isOpenNav}  closeNav={closeNav}/>
     </div>
+    <div className='afterHeader'></div>
+
+    {
+                isOpenAccDropDown !== false &&
+                <>
+                <div className='navbarOverlay' onClick={closeNav}></div>
+                <ul className='dropdownMenu dropdownMenuAcc' onClick={closeNav}>
+                    <li><Button className='align-items-center'><Link to=""><Person2OutlinedIcon /> My Account</Link></Button></li>
+                    <li><Button className='align-items-center'><Link to=""> <img  className='mrCart' src={IconCompare} />Compare</Link></Button></li>
+                    <li><Button className='align-items-center'><Link to={'/cart'}> <img className='mrCart' src={IconCart} />Cart</Link></Button></li>
+                    <li><Button><Link to=""><LocationOnOutlinedIcon /> Order Tracking</Link></Button></li>
+                    <li><Button><Link to=""><FavoriteBorderOutlinedIcon /> My Wishlist</Link></Button></li>
+                    <li><Button><Link to=""><SettingsOutlinedIcon /> Setting</Link></Button></li>
+                    <li><Button onClick={signOut}><Link to=""><LogoutOutlinedIcon /> Sign out</Link></Button></li>
+                </ul>
+                </>
+            }
+
+
      
     </>
 

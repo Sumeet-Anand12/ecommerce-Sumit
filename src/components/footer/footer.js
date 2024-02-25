@@ -217,13 +217,13 @@ const Footer = () => {
                                         </div>
                                     </div>
 
-                                    <div className='phNo d-flex align-items-center  mx-5'>
+                                    {/* <div className='phNo d-flex align-items-center  mx-5'>
                                         <span><HeadphonesOutlinedIcon /></span>
                                         <div className='info ml-3'>
                                             <h3 className='text-g mb-0'>1900 - 888</h3>
                                             <p className='mb-0'>24/7 Support Center</p>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
