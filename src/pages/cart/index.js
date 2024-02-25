@@ -18,11 +18,11 @@ const Cart = () => {
     const history = useNavigate();
 
     useEffect(() => {
-        // if(context.isLogin==="true"){
-            // getCartData("http://localhost:2000/cartItems");
-        // }else{
-        //     history('/');
-        // }
+        if(context.isLogin==="true"){
+            getCartData("http://localhost:2000/cartItems");
+        }else{
+            history('/');
+        }
 
         setTimeout(()=>{
             setCartItems(data.cartItems);

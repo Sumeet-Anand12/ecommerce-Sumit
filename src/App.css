@@ -228,9 +228,8 @@ left: 0px;}
 .filters ul::-webkit-scrollbar-thumb{ background: #ccc !important;}
 .filters ul li{width: 100%; margin-bottom: 0px; list-style: none;}
 
-.filterWrapper{display: none !important;}
+/* .filterWrapper{display: none !important;} */
 .sidebarWrapper .sidebar  .btn{width: 100% !important;}
-
 
 .rightContent .topStrip{padding: 0px 25px;}
 .rightContent .topStrip p{font-size: 20px;}
@@ -319,7 +318,10 @@ ul.breadcrumb li a:hover {
   .addCartSection .counterSec .arrow{position: absolute; cursor: pointer; opacity: 0.6;}
   .addCartSection .counterSec .arrow.plus{top: -5px; right: 10px;}
   .addCartSection .counterSec .arrow.minus{bottom: -5px; right: 10px;}
-
+.addtocartbtn{
+  margin-left: 13px !important;
+  margin-right: 5px !important;
+}
   .addtocartbtn svg{font-size: 28px !important;}
 
   .addCartSection button{height: 60px; min-width: inherit !important;}
@@ -350,7 +352,7 @@ ul.breadcrumb li a:hover {
     padding: 15px 10px;
     padding-right: 20px !important;
 }
-
+.loader{position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 10000; background: #fff; display: flex; align-items: center; justify-content: center;}
 
 
   

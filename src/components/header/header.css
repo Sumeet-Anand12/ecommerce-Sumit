@@ -2,7 +2,9 @@ header{
     width: 100%; height:auto; 
     margin: auto; padding: 30px 0px; background: #fff;}
 .headerWrapper{transition: all 0.3s ease-in-out; background: #fff; position: fixed; top: 0px; left: 0px; width: 100%; z-index: 1000; box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.05);}
+
 .headerWrapper.fixed{ top: -126px;  }
+
 header .headerSearch{width: 100%; height: 60px; border: 1px solid #bce3c9; padding: 10px 20px; border-radius: 4px; }
 
 header .headerSearch .selectDropWrapper{width: 23%; 
@@ -28,12 +30,17 @@ header .headerTabs li span{font-size: 20px; cursor: pointer; text-decoration: no
 header .headerTabs li span:hover{text-decoration: none;}
 header .headerTabs li span *{color: #000;}
 header .headerTabs li span img{margin-right: 10px;}
+
 header .headerTabs li span.badge{width: 28px; height:28px; color: #fff; font-weight: 400; position: absolute; top:-16px; left: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px !important;}
 .dropdownMenu{position: absolute; top: 40px; right: 0px; width: 200px; height: auto; background: #fff;  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); padding: 10px 0px; z-index: 100;}
 .dropdownMenu li{width: 100% !important; list-style: none; margin: 0px !important;}
 .dropdownMenu li button{width: 100% !important; text-align: left !important; justify-content: flex-start !important; color: rgba(0,0,0,0.7) !important; text-transform: capitalize !important; font-size: 18px !important; padding: 12px 15px !important;}
 .dropdownMenu li button svg{opacity: 0.7; margin-right: 8px !important;}
 .dropdownMenu li button:hover{background: #f1f1f1 !important;}
+
+.marginRight{
+    margin-right: 40px !important;
+}
 
 
 

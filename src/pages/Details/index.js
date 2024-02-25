@@ -73,11 +73,11 @@ const DetailsPage = (props) => {
     var settings = {
         dots: false,
         infinite: false,
-        speed: 500,
-        slidesToShow: 4,
+        speed: 1000,
+        slidesToShow: 5,
         slidesToScroll: 1,
         fade: false,
-        arrows:true,
+        arrows:context.windowWidth>992 ? true : false,
         // autoplay:true
     };
 
@@ -280,7 +280,7 @@ const DetailsPage = (props) => {
             <div className='breadcrumbWrapper mb-4'>
                 <div className='container-fluid detailsContainer'>
                     <ul className="breadcrumb breadcrumb2 mb-0">
-                        <li><Link>Home</Link>  </li>
+                        <li><Link to={'/'}>Home</Link>  </li>
                         <li><Link to={`/cat/${prodCat.parentCat.split(' ').join('-').toLowerCase()}`}
                                     onClick={() => sessionStorage.setItem('cat', prodCat.parentCat.split(' ').join('-').toLowerCase())} className='text-capitalize'>{prodCat.parentCat}</Link> </li>
 
@@ -716,7 +716,7 @@ const DetailsPage = (props) => {
 
                             </div>
                            
-                            <div className='col-md-3 marginLeft'>
+                            <div className='col-md-3 marginLeft reviewBox'>
 
                                 <h4>Customer reviews</h4>
                                 <div className='d-flex align-items-center mt-3'>
@@ -791,7 +791,7 @@ const DetailsPage = (props) => {
                         </div>
                   </div>
 
-                  <div className='relatedProducts pt-5 pb-4'>
+                  <div className='relatedProducts pt-5 pb-4 homeProductsRow2'>
                   <h2 className='hd mb-0 mt-0 res-full'>Related Product</h2>
                   <br/>
 

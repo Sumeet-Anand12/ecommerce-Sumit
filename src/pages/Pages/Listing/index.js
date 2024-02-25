@@ -249,11 +249,15 @@ const Listing = (props) => {
 
     return (
         <>
+
+
             {
-                // context.windowWidth < 992 &&
+                
+                context.windowWidth < 992 &&
                 <>
                     {
-                        context.isopenNavigation===false &&
+                       
+                        // context.isopenNavigation===false &&
                         <Button className='btn-g btn-lg w-100 filterBtn' onClick={() => context.openFilters()}>Filters</Button>
                     }
                 </>
@@ -269,7 +273,7 @@ const Listing = (props) => {
                             <h1 className="text-capitalize">{id.split('-').join(' ')}</h1>
                             <ul className='list list-inline mb-0'>
                                 <li className='list-inline-item'>
-                                    <Link to={''}>Home </Link>
+                                    <Link to={'/'}>Home </Link>
                                 </li>
                                 <li className='list-inline-item'>
                                     <Link to={`/cat/${sessionStorage.getItem('cat')}`} className='text-capitalize'>{sessionStorage.getItem('cat')} </Link>
@@ -292,7 +296,7 @@ const Listing = (props) => {
                             <div className={`col-md-3 sidebarWrapper ${context.isOpenFilters===true && 'click'}`}>
 
                                 {
-                                    // data.length !== 0 &&
+                                    data.length !== 0 &&
                                      <Sidebar data={props.data} currentCatData={data} filterByBrand={filterByBrand} filterByPrice={filterByPrice} filterByRating={filterByRating} />
                                 }
 

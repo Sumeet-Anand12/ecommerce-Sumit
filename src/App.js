@@ -1,4 +1,6 @@
+
 import React, { useState, createContext,useEffect } from 'react';
+import './responsive.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/header/header'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,13 +19,21 @@ import DetailsPage from './pages/Details';
 import axios from 'axios';
 import Cart from './pages/cart/index';
 import data from './data';
+import SignIn from './pages/Pages/SignIn/index.js';
+import SignUp from './pages/Pages/SignUp';
+import Loader from './assets/images/loading.gif';
 
 const MyContext = createContext();
 
 const App = () => { 
   const [productData, setProductData] = useState([]);
+  const [isLoading, setIsloading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
+  const [isLogin, setIsLogin] = useState();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [isOpenFilters, setIsopenFilters] = useState(false);
 
+  const [isopenNavigation, setIsopenNavigation] = useState(false);
  
 
   const getData = async (url) => {
@@ -73,24 +83,47 @@ const App = () => {
   const emptyCart = () => {
     setCartItems([])
   }
+  const openFilters=()=>{
+    setIsopenFilters(!isOpenFilters)
+  }
+
+  const signIn = () => {
+    const is_Login = localStorage.getItem('isLogin');
+    setIsLogin(is_Login);
+  }
+
+
+  const signOut = () => {
+    localStorage.removeItem('isLogin');
+    setIsLogin(false);
+  }
+
 
   const value = {
     cartItems,
     addToCart,
     removeItemsFromCart,
     emptyCart,
+    windowWidth,
+    isOpenFilters,
+    openFilters,
+    isLogin,
+    signOut,
+    signIn,
+    setIsopenNavigation
     
   }
-
-
+ 
   useEffect(() => {
     // getData('http://localhost:2000/productData');
     // getCartData("http://localhost:2000/cartItems");
 
-
+    const is_Login = localStorage.getItem('isLogin');
+    setIsLogin(is_Login);
 
     setTimeout(() => {
       setProductData(data[1]);
+      setIsloading(false);
     }, 3000);
 
   
@@ -105,6 +138,10 @@ const App = () => {
    <BrowserRouter>
     <MyContext.Provider value={value}>    
     {/* <Header data={productData}/> */}
+
+    {
+          isLoading===true && <div className='loader'><img src={Loader}/></div>
+        }
     <Header data={data.productData} />
 
       <Routes>
@@ -117,6 +154,8 @@ const App = () => {
         <Route exact={true} path="/cat/:id" element={<Listing data={data.productData} single={true} />} />
         <Route exact={true} path="/cat/:id/:id" element={<Listing data={data.productData} single={false} />} />
         <Route exact={true} path="/product/:id" element={<DetailsPage data={data.productData} />} />
+        <Route exact={true} path="/signIn" element={<SignIn />} />
+          <Route exact={true} path="/signUp" element={<SignUp />} />
          
       <Route exact={true} path="/cart" element={<Cart />} />
       <Route exact={true} path="/shop" element={<Shop/>}/>

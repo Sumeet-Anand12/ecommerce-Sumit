@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Slider from "react-slick";
 import './index.css';
 import Slide1 from '../../../assets/images/slider-1.png';
@@ -11,6 +11,7 @@ import { MyContext } from '../../../App';
 
 
 const HomeSlider = () => {
+    
     const context = useContext(MyContext);
 
     var settings = {
@@ -20,9 +21,10 @@ const HomeSlider = () => {
         slidesToShow: 1,
         slidesToScroll: 1,
         fade: false,
-        arrows:true,
+        arrows:context.windowWidth>992 ? true:false,
         autoplay:true
     };
+    
   return (
     <section className='homeSlider'>
     <div className='container-fluid position-relative'>
@@ -49,7 +51,9 @@ const HomeSlider = () => {
             </div>
         </Slider>
         { 
-            <Newsletter/>
+
+            context.windowWidth >992 &&  <Newsletter/>
+            
         }       
     </div>
 </section>

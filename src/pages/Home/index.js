@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from 'react'
+import React, { useState,useEffect,useRef, useContext } from 'react'
 import './style.css';
 import SliderBanner from './Slider/index';
 import CatSlider from '../../components/catSlider';
@@ -9,6 +9,8 @@ import Slider from "react-slick";
 import TopProducts from './TopProducts/index';
 import NewsletterImg from '../../assets/images/newsletter.png';
 import Newsletter from '../../components/newsletter';
+import { MyContext } from '../../App';
+
 
 
 
@@ -26,17 +28,19 @@ const Home  =(props) => {
   const [bestSells, setBestSells] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
+  const context = useContext(MyContext);
+
   const productRow=useRef();
 
 
   var settings = {
-    dots: true,
-    infinite: true,
+    dots: false,
+    infinite: context.windowWidth<992 ? false : true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
     fade: false,
-    arrows:true,
+    arrows:context.windowWidth<992 ? false : true,
     autoplay:3000,
 };
 
@@ -123,14 +127,14 @@ useEffect(() => {
 
 
   return (
-    <>
+    <div className="none">
       <SliderBanner style={{display:'block'}}/>
       <CatSlider data={prodData} />
       <Banners/>
       
       <section className='homeProducts homeProductWrapper '>
                 <div className='container-fluid'>
-                    <div className='d-flex align-items-center justify-content-between '>
+                    <div className='d-flex align-items-center justify-content-between homeProductTittleWrap'>
                         <h2 className='hd mb-0 mt-0 res-full'>Popular Products</h2>
                             <ul className='list list-inline ml-auto filterTab mb-0 res-full'>
 
@@ -242,7 +246,7 @@ useEffect(() => {
                         <h2 className='hd mb-0 mt-0 res-full'>Daily best Sells</h2>
                             <ul className='list list-inline ml-auto filterTab mb-0 res-full'>
                               
-                              <li className='list-inline-item'>
+                              {/* <li className='list-inline-item'>
                                 <a className='cursor'>Featured</a>
                               </li>
                               <li className='list list-inline-item'>
@@ -250,11 +254,12 @@ useEffect(() => {
                               </li>
                               <li className='list list-inline-item'>
                                 <a className='cursor'>New Added</a>
-                              </li>
+                              </li> */}
                             </ul>
                       </div>
                       <br/>
 
+                    <br className='res-hide'></br>
                       <div className='row'>
                             <div className='col-md-3 pr-3 res-hide'>
                                 <img src={Banner4} className='w-100' />
@@ -335,7 +340,7 @@ useEffect(() => {
 
 
 
-    </>
+    </div>
   )
 }
 

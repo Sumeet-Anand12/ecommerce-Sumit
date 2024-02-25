@@ -1,12 +1,14 @@
-import React, { useEffect,useState, useRef } from 'react'
+import React, { useEffect,useState, useRef, useContext } from 'react'
 import Slider from "react-slick";
 import './style.css';
 import { Link } from 'react-router-dom';
+import { MyContext } from '../../App';
+
 
 
 const CatSlider = (props) => {
    
-    
+    const context = useContext(MyContext);
 
     var settings = {
         dots: false,
@@ -15,9 +17,9 @@ const CatSlider = (props) => {
         slidesToShow: 10,
         slidesToScroll: 1,
         fade: false,
-        arrows:true,
+        arrows:context.windowWidth>992 ? true : false,
         autoplay:2000,
-        centreMode:true,
+        centreMode:context.windowWidth>992 ? true : false,
     };
 
     const slider = useRef();
@@ -95,6 +97,9 @@ const CatSlider = (props) => {
                                             })
                                         }
 
+                    
+
+                    
 
 
 

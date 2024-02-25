@@ -1,10 +1,12 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext } from 'react';
 import './nav.css';
 import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { Link } from 'react-router-dom';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
+import { MyContext } from '../../../App';
+
 
 
 
@@ -18,7 +20,7 @@ const Nav = (props) => {
   const [openDropdownMenuIndex, setDropdownMenuIndex] = useState(null);
   const [openMegaMenu, setOpenMegaMenu] = useState(false);
 
-
+  const context = useContext(MyContext);
 
   useEffect(() => {
     setNavData(props.data);
@@ -42,11 +44,11 @@ const openDropdownFun=(index)=>{
   return (
 
     <>
-     {
-                isOpenNav === true && <div className='navbarOverlay' onClick={props.closeNav}></div>
+          {
+                isOpenNav=== true && <div className='navbarOverlay' onClick={props.closeNav} ></div>
             }
     
-    <div className='nav'>
+    <div className='nav d-flex align-items-center'>
 
       <div className='container-fluid'>
 
@@ -58,7 +60,7 @@ const openDropdownFun=(index)=>{
            </div>
 
            <div className='col-sm-8 part2 position-static'>
-                <nav>
+                <nav className={isOpenNav===true ? 'open' : ''}>
                   <ul className='list list-inline mb-0'>
                   <li className='list-inline-item'>
                     <Button><Link to='/'>Home</Link></Button>
@@ -67,10 +69,12 @@ const openDropdownFun=(index)=>{
                                         navData.length !== 0 &&
                                         navData.map((item, index) => {
                                             return (
+                                                   
                                                 <li className='list-inline-item' key={index}>
-                                                    <Button onClick={()=>openDropdownFun(index)}><a href={`${windowWidth>992 ? `/cat/${item.cat_name.toLowerCase()}` : '#'}`}
+                                                    <Button onClick={()=>openDropdownFun(index)}>
+                                                    <a href={`/cat/${item.cat_name.toLowerCase()}`}
                                                         onClick={() => sessionStorage.setItem('cat', item.cat_name.toLowerCase())}
-                                                    >{item.cat_name}  <KeyboardArrowDownIcon  className={`${openDropdownMenu===true && openDropdownMenuIndex===index && 'rotateIcon'}`}/></a></Button>
+                                                    >{item.cat_name}  <KeyboardArrowDownIcon className={`${openDropdownMenu===true && openDropdownMenuIndex===index && 'rotateIcon'}`}/></a></Button>
                                                     {
                                                         item.items.length !== 0 &&
                                                         <div className={`dropdown_menu ${openDropdownMenu===true && openDropdownMenuIndex===index && 'open'}`}>
@@ -258,6 +262,22 @@ const openDropdownFun=(index)=>{
                     <Button><Link to='/contact'>Contact  </Link></Button>
                   </li>
                   </ul>
+
+                  {
+                                    windowWidth < 992 &&
+                                    <>
+                                    {
+                                        context.isLogin!=="true" &&
+                                         <div className='pl-3 pr-3'>
+                                            <br />
+                                            <Link to={'/signIn'}>
+                                                <Button className="btn btn-g btn-lg w-100" onClick={closeNav}>Sign In</Button>
+                                            </Link>
+                                        </div>
+                                    }
+                                       
+                                    </>
+                                }
 
                 </nav>
             
