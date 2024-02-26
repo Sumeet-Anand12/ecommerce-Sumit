@@ -2,7 +2,7 @@
   "name": "ecommerce-website",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://Sumeet-Anand12.github.io/react-sumit",
+  "homepage": "./",
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
